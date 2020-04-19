@@ -15,6 +15,7 @@ export default (url_template, options = {}) => {
   const {
     prepData = noop, // manipulate data before between fetch and render
     fetch = window.fetch, // override default fetch
+    propName = 'api',
   } = options
 
   const makeUrl = (props) => {
@@ -65,7 +66,8 @@ export default (url_template, options = {}) => {
   const actions = { refetch, getData }
   const makeHook = globalHook(React, settings.getInitialState(), actions)
 
-  return (Component, { propName = 'api' } = {}) => {
+  const og_prop_name = propName
+  return (Component, { propName = og_prop_name } = {}) => {
     return function APIProvider(props) {
       const [_, stateActions] = makeHook()
       const data = stateActions.getData(props)

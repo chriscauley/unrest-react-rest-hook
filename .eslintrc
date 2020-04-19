@@ -1,4 +1,5 @@
 {
+  "files": ["src", "__tests__"],
   "parser": "babel-eslint",
   "extends": [
     "prettier",
