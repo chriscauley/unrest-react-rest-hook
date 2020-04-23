@@ -1,8 +1,8 @@
 {
-  "name": "@unrest/react-api",
+  "name": "@unrest/react-rest-hook",
   "version": "1.0.0",
   "main": "dist.js",
-  "repository": "http://github.com/chriscauley/unrest-react-api.git",
+  "repository": "http://github.com/chriscauley/unrest-react-rest-hook.git",
   "author": "chriscauley",
   "license": "MIT",
   "scripts": {
