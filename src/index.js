@@ -67,12 +67,13 @@ export default (url_template, options = {}) => {
   const makeHook = globalHook(React, settings.getInitialState(), actions)
 
   const og_prop_name = propName
-  return (Component, { propName = og_prop_name } = {}) => {
+  return (Component, { propName = og_prop_name, ...extraProps } = {}) => {
     return function APIProvider(props) {
       const [_, stateActions] = makeHook()
       const data = stateActions.getData(props)
       const connectedProps = {
         ...props,
+        ...extraProps,
         [propName]: {
           ...data,
           refetch: stateActions.refetch,
