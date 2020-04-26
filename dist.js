@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = exports.settings = void 0;
 
+var _react = _interopRequireDefault(require("react"));
+
 var _useGlobalHook = _interopRequireDefault(require("use-global-hook"));
 
 var _lodash = require("lodash");
-
-var _react = _interopRequireDefault(require("react"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -50,6 +50,8 @@ var noop = function noop(a) {
 
 var _default = function _default(url_template) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var stale_at = new Date().valueOf();
+  var fetch_times = {};
   var _options$prepData = options.prepData,
       prepData = _options$prepData === void 0 ? noop : _options$prepData,
       _options$fetch = options.fetch,
@@ -80,6 +82,7 @@ var _default = function _default(url_template) {
     fetch(url).then(function (r) {
       return r.json();
     }).then(function (data) {
+      fetch_times[url] = new Date().valueOf();
       data = prepData(data, props);
       is_loading[url] = false;
       __meta.fetch_count += 1;
@@ -99,8 +102,9 @@ var _default = function _default(url_template) {
 
     var url = makeUrl(props);
     var data = store.state[url];
+    var needs_fetch = !data || fetch_times[url] < stale_at;
 
-    if (!data && !is_loading[url]) {
+    if (needs_fetch && !is_loading[url]) {
       refetch(store, props); // sets is_loading[url]
     }
 
@@ -115,7 +119,8 @@ var _default = function _default(url_template) {
   };
   var makeHook = (0, _useGlobalHook["default"])(_react["default"], settings.getInitialState(), actions);
   var og_prop_name = propName;
-  return function (Component) {
+
+  var RestHook = function RestHook(Component) {
     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
         _ref$propName = _ref.propName,
         propName = _ref$propName === void 0 ? og_prop_name : _ref$propName,
@@ -136,6 +141,12 @@ var _default = function _default(url_template) {
       return /*#__PURE__*/_react["default"].createElement(Component, connectedProps);
     };
   };
+
+  RestHook.markStale = function () {
+    return stale_at = new Date();
+  };
+
+  return RestHook;
 };
 
 exports["default"] = _default;

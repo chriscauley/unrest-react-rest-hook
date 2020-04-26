@@ -1,7 +1,6 @@
+import React from 'react'
 import globalHook from 'use-global-hook'
 import { template } from 'lodash'
-
-import React from 'react'
 
 export const settings = {
   root_url: '',
@@ -12,6 +11,8 @@ export const settings = {
 const noop = (a) => a
 
 export default (url_template, options = {}) => {
+  let stale_at = new Date().valueOf()
+  const fetch_times = {}
   const {
     prepData = noop, // manipulate data before between fetch and render
     fetch = window.fetch, // override default fetch
@@ -43,6 +44,7 @@ export default (url_template, options = {}) => {
     fetch(url)
       .then((r) => r.json())
       .then((data) => {
+        fetch_times[url] = new Date().valueOf()
         data = prepData(data, props)
         is_loading[url] = false
         __meta.fetch_count += 1
@@ -58,7 +60,8 @@ export default (url_template, options = {}) => {
     }
     const url = makeUrl(props)
     const data = store.state[url]
-    if (!data && !is_loading[url]) {
+    const needs_fetch = !data || fetch_times[url]  < stale_at
+    if (needs_fetch && !is_loading[url]) {
       refetch(store, props) // sets is_loading[url]
     }
     return { loading: is_loading[url], ...data }
@@ -67,7 +70,7 @@ export default (url_template, options = {}) => {
   const makeHook = globalHook(React, settings.getInitialState(), actions)
 
   const og_prop_name = propName
-  return (Component, { propName = og_prop_name, ...extraProps } = {}) => {
+  const RestHook = (Component, { propName = og_prop_name, ...extraProps } = {}) => {
     return function APIProvider(props) {
       const [_, stateActions] = makeHook()
       const data = stateActions.getData(props)
@@ -83,4 +86,7 @@ export default (url_template, options = {}) => {
       return <Component {...connectedProps} />
     }
   }
+
+  RestHook.markStale = () => stale_at = new Date()
+  return RestHook
 }
