@@ -45,7 +45,7 @@ export default (url_template, options = {}) => {
       .then((r) => r.json())
       .then((data) => {
         fetch_times[url] = new Date().valueOf()
-        data = prepData(data, props)
+        data = prepData(data, props) || data
         is_loading[url] = false
         __meta.fetch_count += 1
         __meta.logs.push(url)

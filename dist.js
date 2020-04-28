@@ -83,7 +83,7 @@ var _default = function _default(url_template) {
       return r.json();
     }).then(function (data) {
       fetch_times[url] = new Date().valueOf();
-      data = prepData(data, props);
+      data = prepData(data, props) || data;
       is_loading[url] = false;
       __meta.fetch_count += 1;
 
