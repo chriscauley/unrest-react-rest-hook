@@ -134,7 +134,9 @@ var _default = function _default(url_template) {
 
       var data = stateActions.getData(props);
 
-      var connectedProps = _objectSpread({}, props, {}, extraProps, _defineProperty({}, propName, _objectSpread({}, data, {
+      var connectedProps = _objectSpread({}, props, {}, extraProps, _defineProperty({}, propName, _objectSpread({
+        makeUrl: makeUrl
+      }, data, {
         refetch: stateActions.refetch
       })));
 

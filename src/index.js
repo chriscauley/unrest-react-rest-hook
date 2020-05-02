@@ -78,6 +78,7 @@ export default (url_template, options = {}) => {
         ...props,
         ...extraProps,
         [propName]: {
+          makeUrl,
           ...data,
           refetch: stateActions.refetch,
         },
