@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Route, Link } from 'react-router-dom'
+import { HashRouter, Route, Link } from 'react-router-dom'
 import { last } from 'query-string'
 import qs from 'query-string'
 
@@ -15,7 +15,7 @@ const MyComponent = withCharacterTypes(props => {
   }
 
   const page = parseInt(
-    qs.parse(window.location.search.slice(1)).page || 1
+    qs.parse(props.location.search.slice(1)).page || 1
   )
 
   const { slug } = props.match.params
@@ -82,10 +82,10 @@ const Pagination = ({ page, page_count }) => page_count > 1 && (
 class App extends React.Component {
   render() {
     return (
-      <BrowserRouter>
+      <HashRouter>
         <Route path="/:slug" component={MyComponent} />
         <Route exact path="/" component={MyComponent} />
-      </BrowserRouter>
+      </HashRouter>
     )
   }
 }
