@@ -22,7 +22,7 @@ datasets.forEach( args => {
   files[slug+'.json'] = { results: list.slice(0, PER_PAGE) }
   range(1,pages+1).forEach(page_no => {
     const filename = slug+'-'+page_no+'.json'
-    files[filename] = { results: list.slice(page_no*PER_PAGE, (page_no+1)*PER_PAGE) }
+    files[filename] = { results: list.slice((page_no-1)*PER_PAGE, page_no*PER_PAGE) }
   })
 })
 

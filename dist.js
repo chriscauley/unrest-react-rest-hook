@@ -81,7 +81,6 @@ var _default = function _default(url_template) {
   var refetch = function refetch(store) {
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var url = makeUrl(props);
-    console.log(url);
     is_loading[url] = true;
     fetch(url).then(function (r) {
       return r.json();
@@ -143,7 +142,6 @@ var _default = function _default(url_template) {
           stateActions = _makeHook2[1];
 
       var data = stateActions.getData(props);
-      console.log(data);
 
       var connectedProps = _objectSpread(_objectSpread(_objectSpread({}, props), extraProps), {}, _defineProperty({}, propName, _objectSpread(_objectSpread({
         makeUrl: makeUrl
