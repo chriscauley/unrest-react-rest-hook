@@ -7,9 +7,11 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src/index.js --out-file dist.js",
-    "develop": "yarn make-data && yarn parcel docs/index.html",
+    "develop": "yarn make-data && yarn parcel demo/index.html",
+    "build/docs": "rm -rf docs && yarn make-data && yarn _build/docs",
+    "_build/docs": "yarn parcel build demo/index.html --public-url /unrest-react-rest-hook/ -d docs",
     "lint": "yarn eslint src __tests__",
-    "make-data": "node docs/make-data.js"
+    "make-data": "node demo/make-data.js"
   },
   "peerDependencies": {
     "react": ">=15",
@@ -17,10 +19,15 @@
   },
   "dependencies": {
     "lodash": "^4.17.15",
+    "react": ">=15",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
     "use-global-hook": "^0.1.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.0.0-0",
+    "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
