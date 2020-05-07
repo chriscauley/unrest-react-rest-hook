@@ -17,7 +17,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -51,13 +51,16 @@ var noop = function noop(a) {
 var _default = function _default(url_template) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var stale_at = new Date().valueOf();
+  var last_url;
   var fetch_times = {};
   var _options$prepData = options.prepData,
       prepData = _options$prepData === void 0 ? noop : _options$prepData,
       _options$fetch = options.fetch,
       fetch = _options$fetch === void 0 ? window.fetch : _options$fetch,
       _options$propName = options.propName,
-      propName = _options$propName === void 0 ? 'api' : _options$propName;
+      propName = _options$propName === void 0 ? 'api' : _options$propName,
+      _options$use_last = options.use_last,
+      use_last = _options$use_last === void 0 ? false : _options$use_last;
 
   var makeUrl = function makeUrl(props) {
     try {
@@ -78,6 +81,7 @@ var _default = function _default(url_template) {
   var refetch = function refetch(store) {
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var url = makeUrl(props);
+    console.log(url);
     is_loading[url] = true;
     fetch(url).then(function (r) {
       return r.json();
@@ -106,8 +110,14 @@ var _default = function _default(url_template) {
 
     if (needs_fetch && !is_loading[url]) {
       refetch(store, props); // sets is_loading[url]
+    } // sometimes you want a component to continue rendering last data while fetching new data, eg pagination
+
+
+    if (!data && use_last) {
+      data = store.state[last_url];
     }
 
+    last_url = url;
     return _objectSpread({
       loading: is_loading[url]
     }, data);
@@ -133,10 +143,11 @@ var _default = function _default(url_template) {
           stateActions = _makeHook2[1];
 
       var data = stateActions.getData(props);
+      console.log(data);
 
-      var connectedProps = _objectSpread({}, props, {}, extraProps, _defineProperty({}, propName, _objectSpread({
+      var connectedProps = _objectSpread(_objectSpread(_objectSpread({}, props), extraProps), {}, _defineProperty({}, propName, _objectSpread(_objectSpread({
         makeUrl: makeUrl
-      }, data, {
+      }, data), {}, {
         refetch: stateActions.refetch
       })));
 

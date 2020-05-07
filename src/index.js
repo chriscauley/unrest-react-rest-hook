@@ -12,11 +12,13 @@ const noop = (a) => a
 
 export default (url_template, options = {}) => {
   let stale_at = new Date().valueOf()
+  let last_url
   const fetch_times = {}
   const {
     prepData = noop, // manipulate data before between fetch and render
     fetch = window.fetch, // override default fetch
     propName = 'api',
+    use_last = false
   } = options
 
   const makeUrl = (props) => {
@@ -59,11 +61,17 @@ export default (url_template, options = {}) => {
       return
     }
     const url = makeUrl(props)
-    const data = store.state[url]
+    let data = store.state[url]
     const needs_fetch = !data || fetch_times[url]  < stale_at
     if (needs_fetch && !is_loading[url]) {
       refetch(store, props) // sets is_loading[url]
     }
+
+    // sometimes you want a component to continue rendering last data while fetching new data, eg pagination
+    if (!data && use_last) {
+        data = store.state[last_url]
+    }
+    last_url = url
     return { loading: is_loading[url], ...data }
   }
   const actions = { refetch, getData }

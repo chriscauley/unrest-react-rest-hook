@@ -41,7 +41,10 @@ const MyComponent = withCharacterTypes(props => {
   )
 })
 
-const withCharacters = RestHook('./data/${character_type.slug}-${page}.json')
+const withCharacters = RestHook(
+  './data/${character_type.slug}-${page}.json',
+  { use_last: true },
+)
 
 const CharacterList = withCharacters(props => {
   const { pages, name, slug } = props.character_type

@@ -18,7 +18,7 @@ const withUserProfile = RestHook(
 // any other file, import the above and...
 const UserCard = withUserProfile((props) => {
   const { loading, user } = props.user_profile // note 2
-  if (loading && !user) { // see notes 3 & 4
+  if (loading && !user) { // see notes 3 & 4 & 5
     return null
   }
   const { avatar_url, id, username, like_count, refetch } = user
@@ -49,6 +49,8 @@ const UserCard = withUserProfile((props) => {
 3. `refetch(props)` will make a second call to `/api/user/profile/${props.user_id}/` and all components with this hook (and the same `props.user_id`) will be set to `loading=true` and will reload with new data when the fetch completes.
 
 4. While `loading=true` the stale data is still available from `props.user_profile`. Therefore `if (loading && !user) return null` allows the component to render during refetch. `if (loading) return null` would cause an annoying flicker.
+
+5. If you add the option `use_last: true` to RestHook options, then it will use the previous url data while loading (eg, going from `?page=1` to `?page=2` will show page 1 data until page 2 has loaded). I'm considering making this the default behavior.
 
 ## Using with `react-router-dom`
 
