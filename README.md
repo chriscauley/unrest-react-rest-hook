@@ -2,6 +2,8 @@
 
 This is a lightweight alternative to using Redux/Sagas/Thunk I'm building using [use-global-hook](https://www.npmjs.com/package/use-global-hook). This is currently under development and features will be added as I use them, but if you're interested please open an issue here or DM me on twitter [@oneFierceLinter](https://twitter.com/oneFierceLinter).
 
+[Demo](https://chriscauley.github.io/unrest-react-rest-hook/) - The contents of the [demo folder](https://github.com/chriscauley/unrest-react-rest-hook/tree/master/demo) are running on this projects github page.
+
 ## Usage
 
 Install with `npm install @unrest/react-rest-hook` and connect a component to an api endpoint like:
