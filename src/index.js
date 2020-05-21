@@ -18,7 +18,8 @@ export default (url_template, options = {}) => {
     prepData = noop, // manipulate data before between fetch and render
     fetch = window.fetch, // override default fetch
     propName = 'api',
-    use_last = false
+    use_last = false,
+    processRequest = (r) => r.json(), // default assumes data is json
   } = options
 
   const makeUrl = (props) => {
@@ -44,7 +45,7 @@ export default (url_template, options = {}) => {
     const url = makeUrl(props)
     is_loading[url] = true
     fetch(url)
-      .then((r) => r.json())
+      .then(processRequest)
       .then((data) => {
         fetch_times[url] = new Date().valueOf()
         data = prepData(data, props) || data
@@ -62,14 +63,14 @@ export default (url_template, options = {}) => {
     }
     const url = makeUrl(props)
     let data = store.state[url]
-    const needs_fetch = !data || fetch_times[url]  < stale_at
+    const needs_fetch = !data || fetch_times[url] < stale_at
     if (needs_fetch && !is_loading[url]) {
       refetch(store, props) // sets is_loading[url]
     }
 
     // sometimes you want a component to continue rendering last data while fetching new data, eg pagination
     if (!data && use_last) {
-        data = store.state[last_url]
+      data = store.state[last_url]
     }
     last_url = url
     return { loading: is_loading[url], ...data }
@@ -78,7 +79,10 @@ export default (url_template, options = {}) => {
   const makeHook = globalHook(React, settings.getInitialState(), actions)
 
   const og_prop_name = propName
-  const RestHook = (Component, { propName = og_prop_name, ...extraProps } = {}) => {
+  const RestHook = (
+    Component,
+    { propName = og_prop_name, ...extraProps } = {},
+  ) => {
     return function APIProvider(props) {
       const [_, stateActions] = makeHook()
       const data = stateActions.getData(props)
@@ -96,6 +100,6 @@ export default (url_template, options = {}) => {
     }
   }
 
-  RestHook.markStale = () => stale_at = new Date()
+  RestHook.markStale = () => (stale_at = new Date())
   return RestHook
 }

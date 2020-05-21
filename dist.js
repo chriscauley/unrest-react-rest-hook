@@ -60,7 +60,11 @@ var _default = function _default(url_template) {
       _options$propName = options.propName,
       propName = _options$propName === void 0 ? 'api' : _options$propName,
       _options$use_last = options.use_last,
-      use_last = _options$use_last === void 0 ? false : _options$use_last;
+      use_last = _options$use_last === void 0 ? false : _options$use_last,
+      _options$processReque = options.processRequest,
+      processRequest = _options$processReque === void 0 ? function (r) {
+    return r.json();
+  } : _options$processReque;
 
   var makeUrl = function makeUrl(props) {
     try {
@@ -82,9 +86,7 @@ var _default = function _default(url_template) {
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var url = makeUrl(props);
     is_loading[url] = true;
-    fetch(url).then(function (r) {
-      return r.json();
-    }).then(function (data) {
+    fetch(url).then(processRequest).then(function (data) {
       fetch_times[url] = new Date().valueOf();
       data = prepData(data, props) || data;
       is_loading[url] = false;
