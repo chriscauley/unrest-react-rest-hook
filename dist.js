@@ -68,7 +68,7 @@ var _default = function _default(url_template) {
 
   var makeUrl = function makeUrl(props) {
     try {
-      return (0, _lodash.template)(url_template)(props);
+      return settings.root_url + (0, _lodash.template)(url_template)(props);
     } catch (e) {
       // errors from _.template can be tricky without access to props
       console.error("An error occurred trying to make a url \"".concat(url_template, "\" with the following props"), props);

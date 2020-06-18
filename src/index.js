@@ -24,7 +24,7 @@ export default (url_template, options = {}) => {
 
   const makeUrl = (props) => {
     try {
-      return template(url_template)(props)
+      return settings.root_url + template(url_template)(props)
     } catch (e) {
       // errors from _.template can be tricky without access to props
       console.error(

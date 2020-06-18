@@ -6,7 +6,7 @@
   "author": "chriscauley",
   "license": "MIT",
   "scripts": {
-    "build": "babel src/index.js --out-file dist.js && yarn build/docs",
+    "build": "babel src/index.js --out-file dist.js",
     "develop": "yarn make-data && yarn parcel demo/index.html -d docs",
     "build/docs": "rm -rf docs && yarn make-data && yarn _build/docs",
     "_build/docs": "yarn parcel build demo/index.html --public-url /unrest-react-rest-hook/ -d docs",
