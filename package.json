@@ -1,6 +1,6 @@
 {
   "name": "@unrest/react-rest-hook",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist.js",
   "repository": "http://github.com/chriscauley/unrest-react-rest-hook.git",
   "author": "chriscauley",
