@@ -13,6 +13,10 @@ var _lodash = require("lodash");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -24,10 +28,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -131,25 +131,29 @@ var _default = function _default(url_template) {
   var makeHook = (0, _useGlobalHook["default"])(_react["default"], settings.getInitialState(), actions);
   var og_prop_name = propName;
 
+  var use = function use(props) {
+    var _makeHook = makeHook(),
+        _makeHook2 = _slicedToArray(_makeHook, 2),
+        _ = _makeHook2[0],
+        stateActions = _makeHook2[1];
+
+    var data = stateActions.getData(props);
+    return _objectSpread(_objectSpread({
+      makeUrl: makeUrl
+    }, data), {}, {
+      refetch: stateActions.refetch
+    });
+  };
+
   var RestHook = function RestHook(Component) {
-    var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-        _ref$propName = _ref.propName,
-        propName = _ref$propName === void 0 ? og_prop_name : _ref$propName,
-        extraProps = _objectWithoutProperties(_ref, ["propName"]);
+    var extraOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    var _extraOptions$propNam = extraOptions.propName,
+        propName = _extraOptions$propNam === void 0 ? og_prop_name : _extraOptions$propNam,
+        extraProps = _objectWithoutProperties(extraOptions, ["propName"]);
 
     return function APIProvider(props) {
-      var _makeHook = makeHook(),
-          _makeHook2 = _slicedToArray(_makeHook, 2),
-          _ = _makeHook2[0],
-          stateActions = _makeHook2[1];
-
-      var data = stateActions.getData(props);
-
-      var connectedProps = _objectSpread(_objectSpread(_objectSpread({}, props), extraProps), {}, _defineProperty({}, propName, _objectSpread(_objectSpread({
-        makeUrl: makeUrl
-      }, data), {}, {
-        refetch: stateActions.refetch
-      })));
+      var connectedProps = _objectSpread(_objectSpread(_objectSpread({}, props), extraProps), {}, _defineProperty({}, propName, use(props)));
 
       return /*#__PURE__*/_react["default"].createElement(Component, connectedProps);
     };
@@ -159,6 +163,7 @@ var _default = function _default(url_template) {
     return stale_at = new Date();
   };
 
+  RestHook.use = use;
   return RestHook;
 };
 

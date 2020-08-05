@@ -79,21 +79,22 @@ export default (url_template, options = {}) => {
   const makeHook = globalHook(React, settings.getInitialState(), actions)
 
   const og_prop_name = propName
-  const RestHook = (
-    Component,
-    { propName = og_prop_name, ...extraProps } = {},
-  ) => {
+  const use = (props) => {
+    const [_, stateActions] = makeHook()
+    const data = stateActions.getData(props)
+    return {
+      makeUrl,
+      ...data,
+      refetch: stateActions.refetch,
+    }
+  }
+  const RestHook = (Component, extraOptions = {}) => {
+    const { propName = og_prop_name, ...extraProps } = extraOptions
     return function APIProvider(props) {
-      const [_, stateActions] = makeHook()
-      const data = stateActions.getData(props)
       const connectedProps = {
         ...props,
         ...extraProps,
-        [propName]: {
-          makeUrl,
-          ...data,
-          refetch: stateActions.refetch,
-        },
+        [propName]: use(props),
       }
 
       return <Component {...connectedProps} />
@@ -101,5 +102,6 @@ export default (url_template, options = {}) => {
   }
 
   RestHook.markStale = () => (stale_at = new Date())
+  RestHook.use = use
   return RestHook
 }
