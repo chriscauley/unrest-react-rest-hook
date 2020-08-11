@@ -106,6 +106,11 @@ var _default = function _default(url_template) {
     }
 
     var url = makeUrl(props);
+
+    if (RestHook.fakeState) {
+      return RestHook.fakeState[url];
+    }
+
     var data = store.state[url];
     var needs_fetch = !data || fetch_times[url] < stale_at;
 

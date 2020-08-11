@@ -62,6 +62,9 @@ export default (url_template, options = {}) => {
       return
     }
     const url = makeUrl(props)
+    if (RestHook.fakeState) {
+      return RestHook.fakeState[url]
+    }
     let data = store.state[url]
     const needs_fetch = !data || fetch_times[url] < stale_at
     if (needs_fetch && !is_loading[url]) {
