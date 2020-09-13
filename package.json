@@ -15,7 +15,7 @@
     "make-data": "node demo/make-data.js"
   },
   "peerDependencies": {
-    "react": ">=15",
+    "react": ">=16.0.0",
     "react-dom": "^16.13.1",
     "use-global-hook": "^0.1.12"
   },
