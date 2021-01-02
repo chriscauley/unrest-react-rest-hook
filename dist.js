@@ -129,9 +129,16 @@ var _default = function _default(url_template) {
     }, data);
   };
 
+  var clearData = function clearData(store) {
+    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var url = makeUrl(props);
+    delete store.state[url];
+  };
+
   var actions = {
     refetch: refetch,
-    getData: getData
+    getData: getData,
+    clearData: clearData
   };
   var makeHook = (0, _useGlobalHook["default"])(_react["default"], settings.getInitialState(), actions);
   var og_prop_name = propName;
@@ -146,7 +153,8 @@ var _default = function _default(url_template) {
     return _objectSpread(_objectSpread({
       makeUrl: makeUrl
     }, data), {}, {
-      refetch: stateActions.refetch
+      refetch: stateActions.refetch,
+      clearData: stateActions.clearData
     });
   };
 

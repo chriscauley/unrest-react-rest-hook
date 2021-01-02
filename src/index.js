@@ -78,7 +78,11 @@ export default (url_template, options = {}) => {
     last_url = url
     return { loading: is_loading[url], ...data }
   }
-  const actions = { refetch, getData }
+  const clearData = (store, props = {}) => {
+    const url = makeUrl(props)
+    delete store.state[url]
+  }
+  const actions = { refetch, getData, clearData }
   const makeHook = globalHook(React, settings.getInitialState(), actions)
 
   const og_prop_name = propName
@@ -89,6 +93,7 @@ export default (url_template, options = {}) => {
       makeUrl,
       ...data,
       refetch: stateActions.refetch,
+      clearData: stateActions.clearData,
     }
   }
   const RestHook = (Component, extraOptions = {}) => {
