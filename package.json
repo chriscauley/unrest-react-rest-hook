@@ -16,11 +16,11 @@
   },
   "peerDependencies": {
     "react": ">=16.0.0",
-    "react-dom": "^16.13.1",
-    "use-global-hook": "^0.1.12"
+    "react-dom": "^16.13.1"
   },
   "dependencies": {
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "use-global-hook": "^0.1.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
