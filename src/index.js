@@ -78,22 +78,24 @@ export default (url_template, options = {}) => {
     last_url = url
     return { loading: is_loading[url], ...data }
   }
-  const clearData = (store, props = {}) => {
-    const url = makeUrl(props)
-    delete store.state[url]
-  }
-  const actions = { refetch, getData, clearData }
+  const setState = (store, data) => store.setState(data)
+  const actions = { refetch, getData, setState }
   const makeHook = globalHook(React, settings.getInitialState(), actions)
 
   const og_prop_name = propName
   const use = (props) => {
     const [_, stateActions] = makeHook()
     const data = stateActions.getData(props)
+    const url = makeUrl(props)
+    const setData = (data) => {
+      stateActions.setState({[url]: data})
+    }
     return {
       makeUrl,
       ...data,
       refetch: stateActions.refetch,
-      clearData: stateActions.clearData,
+      clearData: () => { throw "DeprecationError: clear data was deprecated. Use refetcth"},
+      setData
     }
   }
   const RestHook = (Component, extraOptions = {}) => {

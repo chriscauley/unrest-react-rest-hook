@@ -129,16 +129,14 @@ var _default = function _default(url_template) {
     }, data);
   };
 
-  var clearData = function clearData(store) {
-    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var url = makeUrl(props);
-    delete store.state[url];
+  var setState = function setState(store, data) {
+    return store.setState(data);
   };
 
   var actions = {
     refetch: refetch,
     getData: getData,
-    clearData: clearData
+    setState: setState
   };
   var makeHook = (0, _useGlobalHook["default"])(_react["default"], settings.getInitialState(), actions);
   var og_prop_name = propName;
@@ -150,11 +148,20 @@ var _default = function _default(url_template) {
         stateActions = _makeHook2[1];
 
     var data = stateActions.getData(props);
+    var url = makeUrl(props);
+
+    var setData = function setData(data) {
+      stateActions.setState(_defineProperty({}, url, data));
+    };
+
     return _objectSpread(_objectSpread({
       makeUrl: makeUrl
     }, data), {}, {
       refetch: stateActions.refetch,
-      clearData: stateActions.clearData
+      clearData: function clearData() {
+        throw "DeprecationError: clear data was deprecated. Use refetcth";
+      },
+      setData: setData
     });
   };
 
